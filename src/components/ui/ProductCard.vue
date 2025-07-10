@@ -1,18 +1,9 @@
 <template>
   <el-card shadow="hover">
     <div class="img-control">
-      <router-link :to="props.link ?? ''">
+      <router-link :to="props.link">
         <img :src="props.image" :alt="props.image" />
       </router-link>
-      <div class="button-group">
-        <el-button color="black" size="default" @click="quantity--" :disabled="quantity === 0">
-          <span>-</span>
-        </el-button>
-        <el-input v-model="quantity" :readonly="true" />
-        <el-button color="black" size="default" @click="quantity++">
-          <span>+</span>
-        </el-button>
-      </div>
     </div>
     <router-link :to="props.link">
       <h1>{{ props.name }}</h1>
@@ -23,16 +14,14 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, ref, computed } from 'vue'
+import { defineProps, computed } from 'vue'
 import type { Products } from '@/types'
 import { RouterLink } from 'vue-router'
 import { useUtils } from '@/composables/useUtils'
 const props = defineProps<Products>()
 
 const { formatPrice } = useUtils()
-
 const formattedPrice = computed(() => formatPrice(props.price))
-const quantity = ref(0)
 </script>
 
 <style scoped>
@@ -74,5 +63,6 @@ a:visited {
 
 .price {
   color: var(--primary-orange);
+  font-weight: bold;
 }
 </style>
