@@ -1,5 +1,8 @@
 <template>
-  <el-row :gutter="20" style="padding: 2rem 35rem">
+  <el-row :gutter="20" style="padding: 2rem 34.5rem">
+    <el-col :span="24">
+      <h1 class="heading">Just For You</h1>
+    </el-col>
     <el-col
       :span="6"
       v-for="product in products.slice(0, loadMore)"
@@ -31,7 +34,7 @@ import { reactive, ref } from 'vue'
 import type { Products } from '@/types'
 import { ElButton, ElEmpty } from 'element-plus'
 
-const loadMore = ref(8)
+const loadMore = ref(12)
 
 const productStore = useProducts()
 
@@ -39,6 +42,10 @@ const products = reactive<Products[] | []>(productStore.products)
 </script>
 
 <style scoped>
+.heading {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
 .product-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
