@@ -2,17 +2,23 @@
   <div class="container">
     <ul class="action-link">
       <li>FEEDBACK</li>
-      <li>SAVE MORE ON APP</li>
-      <li>SELL ON SHOP-PLUS</li>
-      <li>CUSTOMER CARE</li>
-      <li>TRACK MY ORDER</li>
+      <li>SAVE MORE</li>
+      <li>PROFILE</li>
+      <router-link to="/login">LOGIN</router-link>
+      <router-link to="/sign-up">SIGN-UP</router-link>
     </ul>
+    <p>GET BETTER DEALS ON SHOP PLUS!</p>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { RouterLink } from 'vue-router'
+</script>
 
 <style scoped>
+p {
+  display: none;
+}
 .container {
   display: flex;
   justify-content: center;
@@ -30,9 +36,24 @@
   margin-left: 20px;
 }
 
-.action-link li {
+.action-link a,
+li {
   text-decoration: none;
   list-style-type: none;
   font-size: 12px;
+  cursor: pointer;
+}
+a,
+a:visited {
+  color: white;
+}
+
+@media (max-width: 500px) {
+  .action-link {
+    display: none;
+  }
+  p {
+    display: block;
+  }
 }
 </style>
