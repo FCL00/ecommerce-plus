@@ -22,13 +22,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
+import { ElAutocomplete, ElButton, ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
+import type { AutocompleteFetchSuggestionsCallback } from 'element-plus'
+import { ref } from 'vue'
 import { products as productItems } from '@/models'
 import type { Products } from '@/types'
 import { useRouter } from 'vue-router'
-import type { AutocompleteFetchSuggestionsCallback } from 'element-plus'
 
 const state = ref('')
 const router = useRouter()
@@ -59,23 +59,11 @@ const handleSearch = () => {
 </script>
 
 <style scoped>
-.el-form {
-  display: flex;
-}
-
 :deep(.el-input) {
   width: 500px;
   height: 50px;
   --el-input-focus-border-color: var(--primary-black);
   --el-input-border-color: #000;
-}
-
-.el-button {
-  height: 50px;
-  background-color: var(--primary-black);
-  color: white;
-  --el-button-focus-border-color: var(--primary-black);
-  --el-button-active-border-color: #666666;
 }
 
 /* show image on search input */
@@ -92,9 +80,20 @@ const handleSearch = () => {
   object-fit: cover;
   border-radius: 4px;
 }
+.el-button {
+  height: 50px;
+  background-color: var(--primary-black);
+  color: white;
+  --el-button-hover-bg-color: var(--primary-black);
+  --el-button-focus-border-color: var(--primary-black);
+  --el-button-active-border-color: #666666;
+}
+.form {
+  display: flex;
+}
 
-@media (max-width: 768px) {
-  .el-form {
+@media (max-width: 750px) {
+  .form {
     display: none;
   }
 }

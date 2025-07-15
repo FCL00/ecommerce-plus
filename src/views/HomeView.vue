@@ -9,34 +9,42 @@
   </section>
 
   <section id="popular-products" class="container">
-    <h1>Popular Products</h1>
+    <h2>Popular Products</h2>
     <popular-products />
-    <product-list :show-all="true" />
   </section>
+  <div class="center">
+    <router-link to="/products">View All Products</router-link>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { BaseBanner, BasePill, PopularProducts, ProductList } from '@/components'
+import { BaseBanner, BasePill, PopularProducts } from '@/components'
 import { categories } from '@/models'
-// import { RouterLink } from 'vue-router'
-import { onMounted } from 'vue'
-import { products } from '@/models'
-
-onMounted(() => {
-  if (!JSON.parse(localStorage.getItem('products') || `[]`).length) {
-    localStorage.setItem('products', JSON.stringify(products))
-  }
-})
+import { RouterLink } from 'vue-router'
 </script>
 
 <style scoped>
-#popular-products h1 {
-  margin-top: 2rem;
+.container {
+  padding: 20px;
 }
 
-#category,
-#popular-products {
-  padding: 20px;
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  border: 1px black solid;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+a:hover {
+  background-color: black;
+  color: white;
 }
 
 #category,
@@ -57,5 +65,10 @@ h1 {
   width: 100%;
   font-size: 2rem;
   margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
 }
 </style>

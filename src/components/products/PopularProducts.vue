@@ -4,15 +4,12 @@
       v-for="product in popularProducts"
       :key="product.id"
       :id="product.id"
-      :name="product.label"
       :price="product.price"
       :image="product.image"
       :description="product.description"
       :link="product.link"
       :value="product.value"
       :label="product.label"
-      :category="product.category"
-      :subcategory="product.subcategory"
     />
   </div>
 </template>

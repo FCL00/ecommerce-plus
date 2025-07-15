@@ -6,8 +6,11 @@ interface Products {
   link: string
   value: string
   label: string
-  category: string
-  subcategory: string
 }
 
-export type { Products }
+interface Carts extends Products {
+  quantity: number
+  selectedItem?: boolean
+}
+
+export type { Products, Carts }

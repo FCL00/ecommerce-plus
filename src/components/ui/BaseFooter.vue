@@ -11,10 +11,11 @@
           <li><a href="#" class="footer-link">Licensing</a></li>
           <li><a href="#" class="footer-link">Contact</a></li>
         </ul>
+        footer-brand-name
       </div>
       <hr class="footer-divider" />
       <span class="footer-text">
-        © {{ new Date().getFullYear() }} <a href="/" class="footer-link">ShopPlus</a>
+        © {{ new Date().getFullYear() }} <a href="/" class="footer-link">Shop+</a>
         . All Rights Reserved.
       </span>
     </div>
@@ -28,7 +29,6 @@
   background-color: white;
   border-radius: 8px;
   margin: 16px;
-  padding: 24px 0; /* Add padding to top and bottom */
 }
 
 .footer-container {
@@ -41,12 +41,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px; /* Increased gap */
 }
 
 .footer-logo {
   display: flex;
   align-items: center;
+  margin-bottom: 16px;
   text-decoration: none;
 }
 
@@ -57,7 +57,7 @@
 
 .footer-brand-name {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: bold;
   color: black;
   text-decoration: none;
 }
@@ -72,15 +72,12 @@
   font-size: 14px;
   font-weight: 500;
   color: #6b7280;
-  transition:
-    color 0.3s,
-    transform 0.2s;
+  transition: color 0.3s;
   text-decoration: none;
 }
 
 .footer-link:hover {
   color: #000;
-  transform: scale(1.05); /* Slight scaling effect */
 }
 
 .footer-divider {
@@ -102,32 +99,5 @@
 
 .footer-text a:hover {
   text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-  .footer-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 20px; /* Space between items */
-  }
-
-  .footer-links {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .footer-text {
-    font-size: 14px; /* Make footer text slightly larger for mobile */
-  }
-}
-
-@media (max-width: 500px) {
-  .footer-logo {
-    font-size: 18px; /* Adjust font size for logo on small screens */
-  }
-
-  .footer-links {
-    gap: 8px; /* Reduce space between links */
-  }
 }
 </style>

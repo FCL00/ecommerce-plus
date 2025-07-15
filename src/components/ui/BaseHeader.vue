@@ -6,26 +6,20 @@
         <h1 class="brand-name">Shop+</h1>
       </router-link>
       <search-bar />
-      <div class="cart" @click="handleCart()" role="button">
+      <router-link to="/cart" class="cart" role="button">
         <el-icon :size="30"><ShoppingCart /></el-icon>
         <p>Cart</p>
-      </div>
+      </router-link>
     </nav>
   </header>
 </template>
 
 <script lang="ts" setup>
 import TheActionLinks from './ActionLinks.vue'
+import { SearchBar } from '@/components'
+import { ElIcon } from 'element-plus'
 import { ShoppingCart } from '@element-plus/icons-vue'
-import { useRouter, RouterLink } from 'vue-router'
-import SearchBar from './SearchBar.vue'
-
-const router = useRouter()
-
-const handleCart = () => {
-  router.push('/cart')
-  console.log('cart')
-}
+import { RouterLink } from 'vue-router'
 </script>
 
 <style scoped>

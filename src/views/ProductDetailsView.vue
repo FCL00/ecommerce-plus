@@ -3,15 +3,11 @@
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">Homepage</el-breadcrumb-item>
       <el-breadcrumb-item :to="{ path: '/products' }">Products</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/category' }">{{ product?.category }}</el-breadcrumb-item>
-      <el-breadcrumb-item :to="{ path: '/category' }">
-        {{ product?.subcategory }}
-      </el-breadcrumb-item>
       <el-breadcrumb-item>{{ product?.label }}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="product-details">
       <div class="product-image">
-        <el-image class="image" :src="product?.image" fit="fill" :lazy="false" />
+        <el-image :src="product?.image" fit="fill" :lazy="false" />
       </div>
       <div class="product-description">
         <h1>{{ product?.label }}</h1>
@@ -36,20 +32,21 @@
         </div>
       </div>
     </div>
-    <div class="recomendations">
-      <h1>Recomendations</h1>
+
+    <div class="mt">
+      <h1>Recommended Item</h1>
       <popular-products />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { PopularProducts } from '@/components'
 import { useRoute } from 'vue-router'
 import { useProducts } from '@/stores/products'
 import { ref, onMounted, watch, computed } from 'vue'
 import type { Products } from '@/types'
 import { useUtils } from '@/composables/useUtils'
-import { PopularProducts } from '@/components'
 
 const { formatPrice } = useUtils()
 
@@ -79,8 +76,8 @@ watch(
 </script>
 
 <style scoped>
-.recomendations {
-  margin-top: 2rem;
+.mt {
+  margin-top: 32px;
 }
 
 .container {
@@ -108,6 +105,7 @@ watch(
 :deep(.el-image__inner) {
   width: 100%;
   height: 500px;
+  border-radius: 16px;
   object-fit: contain;
 }
 
