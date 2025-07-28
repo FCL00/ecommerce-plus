@@ -1,16 +1,18 @@
 <template>
   <div class="grid">
-    <!-- LEFT COLUMN: Cart Items -->
     <div class="left-col">
       <div class="flex-between" v-if="cartStore.getCartItems.length > 0">
-        <el-checkbox v-model="isSelectedAll" label="Select All" size="large" />
-        <el-button :icon="Delete" type="danger" @click="cartStore.handleRemoveAllItem()">
-          Delete All
-        </el-button>
+        <el-checkbox
+          v-model="isSelectedAll"
+          label="Select All"
+          size="large"
+          @change="() => cartStore.handleAllSelectItem(isSelectedAll)"
+        />
+        <el-button :icon="Delete" type="danger" @click="cartStore.handleRemoveAllItem()"> Delete All </el-button>
       </div>
 
-      <el-empty v-if="cartStore.getCartItems.length === 0" description="No Products Found">
-        <el-button type="primary">Buy some stuff!</el-button>
+      <el-empty v-if="cartStore.getCartItems.length === 0" description="Your cart is empty">
+        <el-button color="black" @click="() => router.push('/products')">Shop Now!</el-button>
       </el-empty>
 
       <cart-card
@@ -25,68 +27,56 @@
         :description="item.description"
         :link="item.link"
         :selected-item="item.selectedItem"
-        @update:selectedItem="(val) => cartStore.handleSelectedItem(item.id, val)"
+        @update:selectedItem="(val) => handleSelectionChange(item.id, val)"
       />
     </div>
 
-    <!-- RIGHT COLUMN: Checkout Summary -->
     <div class="checkout-form">
-      <el-card shadow="always" body-style="{ padding: '20px' }">
-        <h2>Total Price</h2>
+      <el-card shadow="never">
+        <h3 class="">Order Summary</h3>
+        <p>Shipping Fee: {{ formatPrice(100) }}</p>
         <p class="total-amount">
-          {{
-            formatPrice(isSelectedAll ? cartStore.getTotalPrice : cartStore.getSelectedTotalPrice)
-          }}
+          Total Price:
+          {{ formatPrice(cartStore.getAllSelectedCartItems.length > 0 ? cartStore.getSelectedTotalPrice + 100 : 0) }}
         </p>
-        <el-button type="primary" size="large" class="checkout-button"> Place Order </el-button>
+        <el-button size="large" class="checkout-button" @click="handleCheckout()"> Proceed to Checkout &rarr;</el-button>
       </el-card>
     </div>
   </div>
-
-  <!-- <div class="card-list">
-    <div class="flex-between" v-if="cartStore.getCartItems.length > 0">
-      <el-checkbox v-model="isSelectedAll" label="Select All" size="large" />
-      <el-button :icon="Delete" @click="cartStore.handleRemoveAllItem()">Delete</el-button>
-    </div>
-    <el-empty v-if="cartStore.getCartItems.length === 0" description="No Products Found">
-      <el-button>Buy some shit!</el-button>
-    </el-empty>
-    <cart-card
-      v-for="item in cartStore.getCartItems"
-      :key="item.id"
-      :id="item.id"
-      :label="item.label"
-      :value="item.value"
-      :quantity="item.quantity"
-      :price="item.price"
-      :image="item.image"
-      :description="item.description"
-      :link="item.link"
-      :selected-item="item.selectedItem"
-      @update:selectedItem="(val) => cartStore.handleSelectedItem(item.id, val)"
-    />
-    <div class="check-out-form">
-      <h1>
-        Total Price:
-        {{ formatPrice(isSelectedAll ? cartStore.getTotalPrice : cartStore.getSelectedTotalPrice) }}
-      </h1>
-    </div>
-  </div> -->
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, onMounted } from 'vue'
 import { CartCard } from '@/components'
 import { useCart } from '@/stores/carts'
 import { useUtils } from '@/composables/useUtils'
 import { Delete } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { useAuthGuard } from '@/composables/useAuthGuard'
 
+const { requireAuth } = useAuthGuard()
+const router = useRouter()
 const cartStore = useCart()
 const { formatPrice } = useUtils()
-const isSelectedAll = ref(false)
+const isSelectedAll = ref(cartStore.getSelectItems ?? false)
 
-watch(isSelectedAll, (newVal) => {
-  cartStore.handleAllSelectItem(newVal)
+function handleSelectionChange(itemId: string, selected: boolean) {
+  cartStore.handleSelectedItem(itemId, selected)
+  isSelectedAll.value = cartStore.getSelectItems
+}
+
+function handleCheckout() {
+  if (cartStore.getAllSelectedCartItems.length <= 0) {
+    ElMessage.error('No Selected Item')
+  } else {
+    router.push('/checkout')
+  }
+}
+
+onMounted(() => {
+  cartStore.initializeCart()
+  requireAuth()
 })
 </script>
 
@@ -94,15 +84,20 @@ watch(isSelectedAll, (newVal) => {
 .grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  gap: 24px;
   padding: 20px;
-  min-height: 100vh;
-  margin-top: 2rem;
+  margin: 0 auto;
+  max-width: 1400px;
 }
 
 .left-col {
   overflow-y: auto;
   padding-right: 10px;
+  max-height: 1000px;
+}
+
+.el-checkbox {
+  --el-checkbox-checked-text-color: var(--primary-black);
 }
 
 .flex-between {
@@ -111,15 +106,22 @@ watch(isSelectedAll, (newVal) => {
   align-items: center;
   border: 1px solid #ebebeb;
   border-radius: 8px;
-  padding: 8px 20px;
+  padding: 8px 18px;
   margin-bottom: 20px;
   background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
-.checkout-form {
-  /* position: sticky; */
-  /* top: 20px;
-  align-self: start; */
+.el-button.checkout-button {
+  --el-button-outline-color: white;
+  --el-button-text-color: #ffffff9f;
+  --el-button-hover-text-color: white;
+  --el-button-hover-bg-color: var(--primary-black);
+  --el-button-focus-border-color: var(--primary-black);
+  --el-button-active-border-color: #666666;
+  --el-button-hover-border-color: #000;
 }
 
 .checkout-form h2 {
@@ -129,9 +131,7 @@ watch(isSelectedAll, (newVal) => {
 }
 
 .total-amount {
-  font-size: 24px;
   font-weight: bold;
-  color: #000;
   margin-bottom: 20px;
 }
 
@@ -153,132 +153,31 @@ watch(isSelectedAll, (newVal) => {
 
 /* Checked state styles */
 :deep(.el-checkbox.el-checkbox--large.is-checked .el-checkbox__inner) {
-  background-color: var(--primary-gold);
+  background-color: var(--primary-black);
   border-color: var(--primary-black);
-  /* You can add box-shadow or something else here */
 }
 
 /* Change the check icon color */
 :deep(.el-checkbox.el-checkbox--large.is-checked .el-checkbox__inner::after) {
-  border-color: #000;
+  border-color: white;
   position: absolute;
-  left: 8px; /* tweak to center */
-  top: 3px; /* tweak to center */
-  width: 4px; /* bigger width */
-  height: 12px; /* bigger height */
+  left: 7px;
+  top: 2px;
+  width: 4px;
+  height: 12px;
   box-sizing: content-box;
-  border-width: 0 3px 3px 0; /* this creates the check shape */
+  border-width: 0 3px 3px 0;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .left-col {
+    max-height: unset;
+    padding-right: 0;
+  }
 }
 </style>
-
-<!-- <template>
-  <div class="card-list">
-    <div class="top-bar" v-if="cartStore.getCartItems.length > 0">
-      <el-checkbox
-        v-model="isSelectedAll"
-        label="Select All"
-        size="large"
-        class="select-all"
-      />
-      <el-button
-        :icon="Delete"
-        type="danger"
-        plain
-        @click="cartStore.handleRemoveAllItem()"
-      >
-        Delete
-      </el-button>
-    </div>
-
-    <el-empty
-      v-if="cartStore.getCartItems.length === 0"
-      description="No Products Found"
-      class="empty-state"
-    >
-      <el-button type="primary">Buy some stuff!</el-button>
-    </el-empty>
-
-    <div class="cart-items">
-      <cart-card
-        v-for="item in cartStore.getCartItems"
-        :key="item.id"
-        :id="item.id"
-        :label="item.label"
-        :value="item.value"
-        :quantity="item.quantity"
-        :price="item.price"
-        :image="item.image"
-        :description="item.description"
-        :link="item.link"
-        :selected="item.selectedItem"
-        @update:selectedItem="(val) => cartStore.handleSelectedItem(item.id, val)"
-      />
-    </div>
-
-    <div class="check-out-form" v-if="cartStore.getCartItems.length > 0">
-      <h2 class="checkout-text">
-        Total Price:
-        <span class="price-amount">
-          {{ formatPrice(isSelectedAll ? cartStore.getTotalPrice : cartStore.getSelectedTotalPrice) }}
-        </span>
-      </h2>
-      <el-button type="primary" size="large">Place Order</el-button>
-    </div>
-  </div>
-</template> -->
-
-<!-- styles
-.card-list {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.select-all {
-  font-weight: 500;
-  font-size: 16px;
-}
-
-.cart-items {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.check-out-form {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 20px;
-  border-top: 1px solid #eaeaea;
-}
-
-.checkout-text {
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.price-amount {
-  color: var(--primary-gold);
-  margin-left: 8px;
-}
-
-.empty-state {
-  text-align: center;
-  margin-top: 60px;
-}
-
-
-
-
--->

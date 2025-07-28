@@ -8,13 +8,7 @@ export const categories = [
   { name: 'Electronics', subcategories: ['Computers', 'Phones', 'Gadgets', 'Accessories'] },
   {
     name: 'Clothing & Apparel',
-    subcategories: [
-      "Men's Clothing",
-      "Women's Clothing",
-      "Children's Clothing",
-      'Shoes',
-      'Accessories',
-    ],
+    subcategories: ["Men's Clothing", "Women's Clothing", "Children's Clothing", 'Shoes', 'Accessories'],
   },
   {
     name: 'Home & Living',
@@ -71,8 +65,7 @@ export const bannerImages = [
   {
     source: banner1,
     heading: 'Transform Your Home with Our Stylish Furniture',
-    subheading:
-      'From cozy living rooms to elegant dining spaces find the perfect pieces for every room.',
+    subheading: 'From cozy living rooms to elegant dining spaces find the perfect pieces for every room.',
     cta: 'Shop Now & Redefine Your Space',
   },
   {

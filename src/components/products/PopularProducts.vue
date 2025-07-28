@@ -22,27 +22,27 @@ import { ProductCard } from '@/components'
 <style scoped>
 .popular-items {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 products per row by default */
-  gap: 20px; /* Spacing between items */
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
   max-width: 1440px;
   margin: 0 auto;
 }
 
 @media (max-width: 1024px) {
   .popular-items {
-    grid-template-columns: repeat(3, 1fr); /* 3 products per row on tablets */
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .popular-items {
-    grid-template-columns: repeat(2, 1fr); /* 2 products per row on mobile */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
   .popular-items {
-    grid-template-columns: 1fr; /* 1 product per row on very small screens */
+    grid-template-columns: 1fr;
   }
 }
 </style>

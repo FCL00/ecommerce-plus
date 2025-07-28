@@ -2,14 +2,16 @@
   <div class="cart-card">
     <div class="card-left">
       <el-checkbox v-model="localSelected" size="large" class="custom-checkbox" />
-      <el-image :src="props.image" fit="cover" :lazy="true" class="item-image" />
+      <router-link :to="props.link">
+        <el-image :src="props.image" fit="cover" :lazy="true" class="item-image" />
+      </router-link>
     </div>
     <div class="card-right">
-      <router-link :to="props.link" class="item-title">{{ props.label }}</router-link>
-      <p class="item-desc">{{ props.description }}</p>
+      <router-link :to="props.link" class="item-title line-clamp">{{ props.label }}</router-link>
+      <p class="item-desc line-clamp">{{ props.description }}</p>
       <p class="price-tag">{{ totalPrice }}</p>
       <el-input-number v-model="quantity" :min="1" :max="100" />
-      <el-button class="top-right" @click="handleRemoveCartItem(props.id)">X</el-button>
+      <el-button class="top-right" @click="handleRemove()">X</el-button>
     </div>
   </div>
 </template>
@@ -26,27 +28,41 @@ const { formatPrice } = useUtils()
 const props = defineProps<Carts>()
 const emit = defineEmits(['update:selectedItem'])
 const localSelected = ref(props.selectedItem)
-// const isSelected = ref<boolean>(props.selectedItem)
 const quantity = ref(props.quantity)
-const formattedPrice = computed(() => formatPrice(props.price ?? ''))
 const totalPrice = computed(() => formatPrice((props.price ?? 0) * quantity.value))
-const {
-  handleRemoveCartItem,
-  // handleIncreaseQuantity,
-  // handleDecreaseQuantity,
-  handleSetQuantity,
-  // handleSelectedItem,
-} = useCart()
+const { handleRemoveCartItem, handleSetQuantity } = useCart()
 
-// function handleIncrease() {
-//   handleIncreaseQuantity(props.id)
-//   quantity.value++
-// }
+function handleRemove() {
+  ElMessageBox.confirm(`Do you wish to remove this ${props.label} from the cart?`, 'Warning', {
+    confirmButtonText: 'Yes',
+    cancelButtonText: 'No',
+    type: 'warning',
+  })
+    .then(() => {
+      handleRemoveCartItem(props.id)
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: 'Action canceled',
+      })
+    })
+}
 
-// function handleDecrease() {
-//   handleDecreaseQuantity(props.id)
-//   quantity.value--
-// }
+// check if the quantity is over the stock
+watch(quantity, (newQuantity) => {
+  if (newQuantity >= 100) {
+    ElMessageBox.confirm(
+      'You have exceeded the maximum number of  currently available in stock.',
+      'Warning',
+      {
+        confirmButtonClass: 'error',
+        confirmButtonText: 'yes',
+        type: 'error',
+      },
+    )
+  }
+})
 
 watch(quantity, (newQuantity) => {
   if (newQuantity <= 0 || !newQuantity) {
@@ -69,7 +85,7 @@ watch(quantity, (newQuantity) => {
 })
 
 // watch the checkbox if its status change
-watch(localSelected, (val) => {
+watch(localSelected, (val: boolean) => {
   emit('update:selectedItem', val)
 })
 
@@ -90,6 +106,7 @@ a {
   --el-card-padding: 0px;
   display: flex;
 }
+
 .top-right {
   position: absolute;
   top: 0px;
@@ -143,7 +160,7 @@ a {
 .card-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .item-image {
@@ -177,21 +194,3 @@ a {
   color: var(--primary-orange);
 }
 </style>
-
-<!-- <el-card class="cart-card-wrapper" shadow="hover">
-    <div class="cart-card-image">
-      <el-image style="width: 250px; height: 250px" :src="props.image" fit="cover" :lazy="true" />
-      <el-checkbox v-model="localSelected" fill="#409eff" size="large" />
-    </div>
-    <div class="cart-card-content">
-      <h3>{{ props.label }}</h3>
-      <p>{{ formattedPrice }}</p>
-      <p>Total Price: {{ totalPrice }}</p>
-      <div class="quantity-control">
-        <el-button size="default" @click="handleDecrease()">-</el-button>
-        <el-input type="number" v-model="quantity" :max="100" />
-        <el-button size="default" @click="handleIncrease()">+</el-button>
-      </div>
-    </div>
-    <el-button class="top-right" @click="handleRemoveCartItem(props.id)">X</el-button>
-  </el-card> -->

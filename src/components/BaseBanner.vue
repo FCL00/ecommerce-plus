@@ -1,12 +1,14 @@
 <template>
   <section class="container">
     <el-carousel height="450px" trigger="click" class="carousel" indicator-position="outside">
-      <el-carousel-item class="carousel-item" v-for="(image, index) in bannerImages" :key="index">
-        <div class="banner-background" :style="{ backgroundImage: `url(${image.source})` }">
+      <el-carousel-item class="carousel-item" v-for="(banner, index) in bannerImages" :key="index">
+        <div class="banner-background" :style="{ backgroundImage: `url(${banner.source})` }">
           <div class="text-overlay">
-            <h1>{{ image.heading }}</h1>
-            <p>{{ image.subheading }}</p>
-            <el-button>{{ image.cta }} &rarr;</el-button>
+            <h1>{{ banner.heading }}</h1>
+            <p>{{ banner.subheading }}</p>
+            <el-button @click="() => router.push('/products')">Shop Now! &rarr;</el-button>
+            <!-- <el-button>{{ image.cta }} &rarr;</el-button> -->
+            <p></p>
           </div>
         </div>
       </el-carousel-item>
@@ -16,16 +18,20 @@
 
 <script lang="ts" setup>
 import { bannerImages } from '@/models'
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 </script>
 
 <style lang="css" scoped>
 .container {
-  padding: 20px;
+  padding: 0;
 }
+
 .carousel {
   width: 100%;
   max-width: 1440px;
-  margin: 2px auto;
+  margin: 0 auto;
   overflow: hidden;
   border-radius: 8px;
 }
@@ -49,13 +55,15 @@ import { bannerImages } from '@/models'
 }
 
 h1 {
-  font-size: 4rem;
+  font-size: 3rem;
   margin: 0.5rem 0;
+  line-height: 1.1;
 }
 
 p {
   font-size: 2rem;
   margin: 0;
+  line-height: 1.4;
 }
 
 /* CTA button styles */
@@ -131,21 +139,47 @@ p {
 
 /* mobile */
 @media (max-width: 768px) {
-  .text-overlay {
-    width: 500px;
+  .container {
+    padding: 0; 
   }
-  h1 {
-    font-size: 2rem;
-  }
-}
-/* tablets */
-@media (min-width: 768px) {
+
   .text-overlay {
-    width: 900px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    width: auto;
+    text-align: start;
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  :deep(.el-button) {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+  }
+}
+
+/* tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .text-overlay {
+    left: 50px;
+    width: auto;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  p {
+    font-size: 1.25rem;
   }
 }
 </style>

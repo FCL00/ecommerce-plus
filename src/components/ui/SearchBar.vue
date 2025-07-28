@@ -1,12 +1,12 @@
 <template>
-  <el-form class="form" @submit.prevent="handleSearch()">
+  <el-form class="form" @submit.prevent="handleSearch">
     <el-autocomplete
-      v-model="state"
+      v-model="searchInput"
       :fetch-suggestions="querySearch"
       :trigger-on-focus="false"
       clearable
       class="inline-input w-50"
-      placeholder="Search in Shop Chops"
+      placeholder="Search"
       @select="handleSelect"
       popper-class="custom-autocomplete"
     >
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ElAutocomplete, ElButton, ElMessage } from 'element-plus'
+import { ElAutocomplete, ElButton } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
 import type { AutocompleteFetchSuggestionsCallback } from 'element-plus'
 import { ref } from 'vue'
@@ -30,7 +30,7 @@ import { products as productItems } from '@/models'
 import type { Products } from '@/types'
 import { useRouter } from 'vue-router'
 
-const state = ref('')
+const searchInput = ref('')
 const router = useRouter()
 
 const products = ref<Products[]>(productItems)
@@ -54,13 +54,12 @@ const handleSelect = (item: Record<string, any>) => {
 }
 
 const handleSearch = () => {
-  ElMessage.success('searching')
+  router.push(`/search/${searchInput.value}`)
 }
 </script>
 
 <style scoped>
 :deep(.el-input) {
-  width: 500px;
   height: 50px;
   --el-input-focus-border-color: var(--primary-black);
   --el-input-border-color: #000;
@@ -90,11 +89,8 @@ const handleSearch = () => {
 }
 .form {
   display: flex;
+  justify-content: start;
 }
 
-@media (max-width: 750px) {
-  .form {
-    display: none;
-  }
-}
+
 </style>

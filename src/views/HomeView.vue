@@ -5,11 +5,16 @@
 
   <section id="category" class="container">
     <h1>Categories</h1>
-    <base-pill v-for="(category, index) in categories" :key="index" :name="category.name" />
+    <div class="category-list">
+      <base-pill v-for="(category, index) in categories" :key="index" :name="category.name" />
+    </div>
   </section>
 
   <section id="popular-products" class="container">
     <h2>Popular Products</h2>
+    <div class="search-bar-form">
+      <search-bar />
+    </div>
     <popular-products />
   </section>
   <div class="center">
@@ -18,12 +23,27 @@
 </template>
 
 <script lang="ts" setup>
-import { BaseBanner, BasePill, PopularProducts } from '@/components'
+import { BaseBanner, BasePill, PopularProducts, SearchBar } from '@/components'
 import { categories } from '@/models'
 import { RouterLink } from 'vue-router'
 </script>
 
 <style scoped>
+.search-bar-form {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 750px) {
+  .search-bar-form {
+    display: none;
+  }
+}
+
+#banner {
+  padding: 0px;
+}
+
 .container {
   padding: 20px;
 }
@@ -69,6 +89,40 @@ h1 {
 
 h2 {
   font-size: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .category-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding-bottom: 8px;
+  }
+
+  .category-list > * {
+    flex: 0 0 auto;
+  }
+}
+/* Optional: style the scrollbar */
+.category-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 4px;
+}
+
+.category-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 </style>

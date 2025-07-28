@@ -35,7 +35,7 @@ input[type='number'] {
 :deep(.el-checkbox.el-checkbox--large .el-checkbox__inner) {
   height: 24px;
   width: 24px;
-  border: 2px solid var(--primary-black);
+  border: 2px solid var(--primary-orange);
   background-color: white;
   transition: all 0.3s ease;
   position: relative;
@@ -55,4 +55,39 @@ input[type='number'] {
   height: 12px;
   box-sizing: content-box;
   border-width: 0 3px 3px 0;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+/* ::-webkit-scrollbar-track {
+} */
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555 ;
+}
+
+.xs {
+  font-size: 14px;
+}
+
+.price-tag {
+  color: var(--primary-orange);
+}
+
+.line-clamp {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 1 !important;
+  -webkit-box-orient: vertical !important;  
+  overflow: hidden !important;
 }

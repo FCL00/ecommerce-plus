@@ -1,100 +1,121 @@
 import { defineStore } from 'pinia'
-import type { Carts } from '@/types'
-import { useUtils } from '@/composables/useUtils'
+import type { Carts, CartStorage } from '@/types'
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useUtils } from '@/composables/useUtils'
+import { useAuth } from './auth'
+// import { useOrder } from './orders'
+// import { useAddress } from './address'
 
 export const useCart = defineStore('cart', {
   state: () => ({
-    cart: JSON.parse(localStorage.getItem('cartItems') || '[]') as Carts[],
+    cart: [] as Carts[],
+    buyNowItem: {} as Carts | null
   }),
+
   getters: {
     getCartItems: (state) => state.cart,
-    getTotalPrice: (state) =>
-      state.cart.reduce((total, item) => {
-        return total + item.quantity * item.price
-      }, 0),
-    getSelectedTotalPrice: (state) => {
-      return state.cart
-        .filter((item) => item.selectedItem === true)
-        .reduce((total, item) => total + item.quantity * item.price, 0)
-    },
+    getTotalPrice: (state) => state.cart.reduce((total, item) => total + item.quantity * item.price, 0),
+    getSelectedTotalPrice: (state) =>
+      state.cart.filter((item) => item.selectedItem).reduce((total, item) => total + item.quantity * item.price, 0),
+    getSelectItems: (state) => state.cart.length > 0 && state.cart.every((item) => item.selectedItem),
+    getAllSelectedCartItems: (state) => state.cart.filter((item) => item.selectedItem === true),
+    getBuyNowItems: (state) => state.buyNowItem
   },
 
   actions: {
+    
+    setBuyNow(cartItem: Carts){
+      const tempItem = cartItem
+      localStorage.setItem('buyNowItem', JSON.stringify(tempItem))
+    },
+
+    clearBuyNow(){
+      localStorage.removeItem('buyNowItem')
+    },
+
+    initializeCart() {
+      const auth = useAuth()
+      const user = auth.getCurrentUser
+      const cartMap: CartStorage = JSON.parse(localStorage.getItem('cart') || '{}')
+      this.cart = user?.id && cartMap[user.id] ? cartMap[user.id] : []
+
+      this.buyNowItem = JSON.parse(localStorage.getItem('buyNowItem') || `{}`) as Carts
+    },
+
+    saveCartItemsOnLocalStorage() {
+      const auth = useAuth()
+      const user = auth.getCurrentUser
+      if (!user?.id) return
+      const cartMap: CartStorage = JSON.parse(localStorage.getItem('cart') || '{}')
+      cartMap[user.id] = this.cart
+      localStorage.setItem('cart', JSON.stringify(cartMap))
+    },
+
+    clearCartOnLogout() {
+      this.cart = []
+    },
+    
+    removeCartItems(){
+      this.cart = this.cart.filter((item) => !item.selectedItem)
+      this.saveCartItemsOnLocalStorage()
+    },
+
     handleAllSelectItem(value: boolean) {
       this.cart = this.cart.map((item) => ({ ...item, selectedItem: value }))
       this.saveCartItemsOnLocalStorage()
     },
-    handleSelectedItem(ItemId: string, isSelected = false) {
-      const index = this.cart.findIndex((item) => item.id === ItemId)
+
+    handleSelectedItem(itemId: string, isSelected = false) {
+      const index = this.cart.findIndex((item) => item.id === itemId)
       if (index !== -1) {
         this.cart[index].selectedItem = isSelected
       }
       this.saveCartItemsOnLocalStorage()
     },
+
     handleRemoveAllItem() {
-      ElMessageBox.confirm(
-        'Are you sure you want to remove all the items in the cart?',
-        'Warning',
-        {
-          confirmButtonText: 'Yes',
-          cancelButtonText: 'Cancel',
-          type: 'warning',
-        },
-      )
+      ElMessageBox.confirm('Are you sure you want to remove all the items in the cart?', 'Warning', {
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      })
         .then(() => {
           this.cart = []
           this.saveCartItemsOnLocalStorage()
-          ElMessage.success('Successfully remove all the items')
+          ElMessage.success('Successfully removed all items')
         })
         .catch(() => {
-          ElMessage.info('Action Cancelled')
+          ElMessage.info('Action cancelled')
         })
     },
+
     handleAddToCart(cartItem: Carts) {
       const { toastMessage } = useUtils()
-      const index = this.cart.findIndex((item: Carts) => item.id === cartItem.id)
-      if (index != -1) {
+      const index = this.cart.findIndex((item) => item.id === cartItem.id)
+
+      if (index !== -1) {
         this.cart[index].quantity += cartItem.quantity
       } else {
         this.cart.push(cartItem)
       }
+
       this.saveCartItemsOnLocalStorage()
-      toastMessage('Success', `${cartItem.label} is added on the cart`, 'success')
+      toastMessage('Success', `${cartItem.label} has been added to the cart`, 'success')
     },
-    handleRemoveCartItem(ItemId: string) {
+
+    handleRemoveCartItem(itemId: string) {
       const { toastMessage } = useUtils()
-      this.cart = this.cart.filter((item) => item.id !== ItemId)
-      toastMessage('Success', `the item has been remove from the cart`, 'success')
+      this.cart = this.cart.filter((item) => item.id !== itemId)
       this.saveCartItemsOnLocalStorage()
+      toastMessage('Success', 'Item removed from cart', 'success')
     },
-    handleIncreaseQuantity(id: string) {
-      const index = this.cart.findIndex((item) => item.id === id)
-      if (index !== -1) {
-        this.cart[index].quantity++
-      }
-      this.saveCartItemsOnLocalStorage()
-    },
-    handleDecreaseQuantity(id: string) {
-      const index = this.cart.findIndex((item) => item.id === id)
-      if (index !== -1) {
-        this.cart[index].quantity--
-      }
-      this.saveCartItemsOnLocalStorage()
-    },
+
     handleSetQuantity(id: string, newQuantity: number) {
       const index = this.cart.findIndex((item) => item.id === id)
       if (index !== -1) {
         this.cart[index].quantity = newQuantity
+        this.saveCartItemsOnLocalStorage()
       }
-      this.saveCartItemsOnLocalStorage()
-    },
-    getCartItemsFromLocalStorage() {
-      return JSON.parse(localStorage.getItem('cartItems') || '[]') as Carts[]
-    },
-    saveCartItemsOnLocalStorage() {
-      console.log('Saving to localStorage:', JSON.stringify(this.cart))
-      localStorage.setItem('cartItems', JSON.stringify(this.cart))
     },
   },
 })

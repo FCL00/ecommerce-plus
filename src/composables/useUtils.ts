@@ -1,8 +1,12 @@
 import { ElNotification } from 'element-plus'
-
-type variant = 'info' | 'warning' | 'success' | 'error'
+import type { Variant } from '@/types'
 
 export const useUtils = () => {
+  /**
+   * Format numbers into ex: '₱100.00'
+   * @param {number} amount:number
+   * @returns {any}
+   */
   const formatPrice = (amount: number): string => {
     return new Intl.NumberFormat('en-PH', {
       style: 'currency',
@@ -12,20 +16,60 @@ export const useUtils = () => {
   }
 
   /**
-   * Display a toast message on bottom right
+   * Display a toast message at the bottom right
    * @param {string} title:string
    * @param {string} message:string
    * @param {string } type: 'info' | 'warning' | 'success' | 'error'
+   * @param {string } duration:number | miliseconds ex: 1000
    */
-  const toastMessage = (title: string, message: string, type: variant) => {
+  const toastMessage = (title: string, message: string, type: Variant, duration = 0o500) => {
     ElNotification({
       title: title,
       message: message,
       type: type,
-      duration: 0o500,
+      duration: duration,
       position: 'bottom-right',
     })
   }
 
-  return { formatPrice, toastMessage }
+  /**
+   * Truncate text
+   * @param {string} text:string
+   * @param {number} length:number
+   * @returns {string}
+   */
+  const truncateText = (text: string, length: number) => {
+    if (text.length <= length) return
+    return text.slice(0, length) + ' . . .'
+  }
+
+  /**
+   * Capitalize the first letter of the string
+   * @param {any} value:string
+   * @returns {string}
+   */
+  const capitalizeFirstWord = (value: string): string => {
+    if (!value) return ''
+    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()
+  }
+
+  /**
+   *  Capitalize each word of the string
+   * @param {any} value:string
+   * @returns {any}
+   */
+  const capitalizeEachWord = (value: string): string => {
+    if (!value) return ''
+    return value
+      .split(' ')
+      .map((word) =>
+        word
+          .split('-')
+          .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+          .join('-'),
+      )
+      .join(' ')
+  }
+
+  return { formatPrice, toastMessage, truncateText, capitalizeFirstWord, capitalizeEachWord }
 }
