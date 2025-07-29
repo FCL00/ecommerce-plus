@@ -17,6 +17,7 @@ import ForgotPassword from '@/views/ForgotPassword.vue'
 import Password from '@/views/Password.vue'
 
 import { useAuth } from '@/stores/auth'
+import { ElMessageBox } from 'element-plus'
 
 const routes = [
   {
@@ -63,8 +64,14 @@ const routes = [
         name: 'logout',
         beforeEnter: (to, from, next) => {
           const auth = useAuth()
-          auth.handleLogout()
-          next('/')
+          ElMessageBox.confirm('Do you really want to logout?', 'Warning', { type: 'warning' })
+            .then(() => {
+              auth.handleLogout()
+              next('/')
+            })
+            .catch(() => {
+              next(false)
+            })
         },
       },
     ],
@@ -93,6 +100,14 @@ const routes = [
         path: ':id',
         name: 'product-details',
         component: ProductDetails,
+        beforeEnter: (to, from, next) => {
+          const isValidUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(to.params.id)
+          if (isValidUUID) {
+            next()
+          } else {
+            next('/not-found')
+          }
+        },
       },
     ],
   },

@@ -34,12 +34,6 @@ import { RouterLink } from 'vue-router'
   margin-bottom: 20px;
 }
 
-@media (min-width: 750px) {
-  .search-bar-form {
-    display: none;
-  }
-}
-
 #banner {
   padding: 0px;
 }
@@ -99,6 +93,20 @@ h2 {
   justify-content: flex-start;
 }
 
+/* Optional: style the scrollbar */
+.category-list::-webkit-scrollbar {
+  height: 6px;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+  background-color: #aaa;
+  border-radius: 4px;
+}
+
+.category-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 @media (max-width: 768px) {
   .category-list {
     flex-wrap: nowrap;
@@ -112,17 +120,10 @@ h2 {
     flex: 0 0 auto;
   }
 }
-/* Optional: style the scrollbar */
-.category-list::-webkit-scrollbar {
-  height: 6px;
-}
 
-.category-list::-webkit-scrollbar-thumb {
-  background-color: #aaa;
-  border-radius: 4px;
-}
-
-.category-list::-webkit-scrollbar-thumb:hover {
-  background: #555;
+@media (min-width: 750px) {
+  .search-bar-form {
+    display: none;
+  }
 }
 </style>

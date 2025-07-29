@@ -1,7 +1,9 @@
 <template>
   <div class="container">
     <ul class="action-link">
-      <router-link v-if="authStore.token" to="/profile">PROFILE</router-link>
+      <li>Welcome Back!</li>
+      <!-- <li></li> -->
+      <!-- <router-link v-if="authStore.token" to="/profile">PROFILE</router-link> -->
       <router-link v-if="!authStore.token" to="/login">LOGIN</router-link>
       <router-link v-if="!authStore.token" to="/sign-up">SIGNUP</router-link>
       <!-- <li v-if="authStore.token" @click="onLogout">LOGOUT</li> -->

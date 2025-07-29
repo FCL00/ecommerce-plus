@@ -21,12 +21,10 @@
       <el-empty v-else description="No products found" />
     </div>
     <div class="load-more-container">
-      <el-button @click="loadMore += 8">LOAD MORE</el-button>
+      <el-button v-if="loadMore < products.length" @click="loadMore += 8">LOAD MORE</el-button>
     </div>
   </div>
 </template>
-
-
 
 <script lang="ts" setup>
 import { ProductCard, SearchBar } from '@/components'
@@ -72,17 +70,30 @@ const products = reactive<Products[] | []>(productStore.products)
 }
 
 .el-button {
-  background-color: var(--primary-black);
+  text-decoration: none;
+  color: black;
+  border: 1px black solid;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+.el-button:hover {
+  background-color: black;
   color: white;
 }
 
-.search-bar-form{
+/* .el-button {
+  background-color: var(--primary-black);
+  color: white;
+} */
+
+.search-bar-form {
   width: 100%;
   margin-bottom: 20px;
 }
 
 @media (min-width: 750px) {
-  .search-bar-form{
+  .search-bar-form {
     display: none;
   }
 }
