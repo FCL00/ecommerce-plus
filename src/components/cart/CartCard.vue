@@ -11,7 +11,7 @@
       <p class="item-desc line-clamp">{{ props.description }}</p>
       <p class="price-tag">{{ totalPrice }}</p>
       <el-input-number v-model="quantity" :min="1" :max="100" />
-      <el-button class="top-right" type="danger" @click="handleRemove()">
+      <el-button class="top-right" type="danger" @click="handleRemove">
         <el-icon>
           <Delete />
         </el-icon>
@@ -58,7 +58,7 @@ watch(quantity, (newQuantity) => {
   if (newQuantity >= 100) {
     ElMessageBox.confirm('You have exceeded the maximum number of  currently available in stock.', 'Warning', {
       confirmButtonClass: 'error',
-      confirmButtonText: 'yes',
+      confirmButtonText: 'Continue',
       type: 'error',
     })
   }

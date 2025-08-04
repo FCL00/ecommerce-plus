@@ -3,6 +3,11 @@
     <div class="search-bar-form">
       <search-bar />
     </div>
+    <el-breadcrumb separator-class="el-icon-arrow-right">
+      <el-breadcrumb-item :to="{ path: '/' }">Home Page</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/products' }">Products</el-breadcrumb-item>
+    </el-breadcrumb>
+
     <h1 class="heading">Just For You</h1>
     <div class="product-list">
       <template v-if="products.length">
@@ -41,6 +46,10 @@ const products = reactive<Products[] | []>(productStore.products)
 </script>
 
 <style scoped>
+.el-breadcrumb {
+  margin: 2rem 0 1rem 0;
+}
+
 .product-section {
   padding: 1rem;
   max-width: 1440px;
@@ -50,7 +59,6 @@ const products = reactive<Products[] | []>(productStore.products)
 
 .heading {
   font-size: 24px;
-  margin: 2rem 0 1rem 0;
   box-sizing: border-box;
 }
 

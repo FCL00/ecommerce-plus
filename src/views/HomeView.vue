@@ -1,5 +1,8 @@
 <template>
   <section id="banner" class="container">
+    <div class="search-bar-form">
+      <search-bar />
+    </div>
     <base-banner />
   </section>
 
@@ -12,9 +15,7 @@
 
   <section id="popular-products" class="container">
     <h2>Popular Products</h2>
-    <div class="search-bar-form">
-      <search-bar />
-    </div>
+
     <popular-products />
   </section>
   <div class="center">
@@ -31,7 +32,9 @@ import { RouterLink } from 'vue-router'
 <style scoped>
 .search-bar-form {
   width: 100%;
-  margin-bottom: 20px;
+  padding: 0 20px;
+  margin: 20px 0;
+  box-sizing: border-box;
 }
 
 #banner {

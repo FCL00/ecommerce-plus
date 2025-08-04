@@ -19,7 +19,7 @@
               <el-dropdown-item @click="router.push('/profile')">Profile</el-dropdown-item>
               <el-dropdown-item @click="router.push('/account-security')">Manage Account</el-dropdown-item>
               <el-dropdown-item @click="router.push('/order')">Purchase History</el-dropdown-item>
-              <el-dropdown-item @click="router.push('/logout')">Logout</el-dropdown-item>
+              <el-dropdown-item @click="handleLogout">Logout</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -27,7 +27,9 @@
         <router-link to="/cart" class="link" role="button">
           <el-icon :size="20"><ShoppingCart /></el-icon>
           <span>Cart</span>
-          <span v-if="cartStore.getCartItems.length > 0" class="cart-item-counter">{{ cartStore.getCartItems.length }}</span>
+          <span v-if="cartStore.getCartItems.length > 0" class="">
+            {{ authStore.token != null ? `(${cartStore.getCartItems.length})` : '' }}
+          </span>
         </router-link>
       </div>
     </nav>
@@ -37,7 +39,7 @@
 <script lang="ts" setup>
 import TheActionLinks from './ActionLinks.vue'
 import { SearchBar } from '@/components'
-import { ElIcon } from 'element-plus'
+import { ElIcon, ElMessageBox } from 'element-plus'
 import { ShoppingCart, User } from '@element-plus/icons-vue'
 import { RouterLink } from 'vue-router'
 import { useAuth } from '@/stores/auth'
@@ -47,6 +49,18 @@ import { useCart } from '@/stores/carts'
 const cartStore = useCart()
 const router = useRouter()
 const authStore = useAuth()
+
+function handleLogout() {
+  ElMessageBox.confirm('Do you really want to logout?', 'Warning', { type: 'warning' })
+    .then(() => {
+      authStore.handleLogout()
+      cartStore.clearBuyNow()
+      router.push('/')
+    })
+    .catch(() => {
+      return
+    })
+}
 </script>
 
 <style scoped>
@@ -106,6 +120,12 @@ const authStore = useAuth()
 
 .search-bar-form {
   width: 500px;
+}
+
+@media (max-width: 853px) {
+  .search-bar-form {
+    width: 400px;
+  }
 }
 
 @media (max-width: 768px) {

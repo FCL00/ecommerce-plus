@@ -6,7 +6,7 @@
         <router-link to="/profile" exact-active-class="active">My Profile</router-link>
         <router-link to="/account-security" exact-active-class="active">Manage Account</router-link>
         <router-link to="/order" exact-active-class="active">Purchase History</router-link>
-        <router-link to="/logout" exact-active-class="active">Logout</router-link>
+        <el-button type="danger" @click="onLogOut">Logout</el-button>
       </aside>
 
       <main class="content">
@@ -17,10 +17,38 @@
 </template>
 
 <script lang="ts" setup>
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRouter } from 'vue-router'
+import { useAuth } from '@/stores/auth'
+import { ElMessageBox, ElMessage } from 'element-plus'
+import { useCart } from '@/stores/carts'
+
+const router = useRouter()
+const authStore = useAuth()
+const cartStore = useCart()
+
+function onLogOut() {
+  ElMessageBox.confirm('Are you sure you want to logout?', 'Warning', { confirmButtonText: 'YES', type: 'warning' })
+    .then(() => {
+      authStore.handleLogout()
+      cartStore.clearBuyNow()
+      ElMessage.success('Successfully logged out')
+      router.push('/')
+    })
+    .catch(() => {
+      return
+    })
+}
 </script>
 
 <style scoped>
+.el-button {
+  padding: 25px 20px;
+  display: flex;
+  justify-content: start;
+  text-align: start;
+  font-weight: 500;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
