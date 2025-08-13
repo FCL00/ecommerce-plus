@@ -13,7 +13,7 @@
 
     <div class="product-details">
       <div class="product-image">
-        <el-image class="product-image-el" :src="product?.image" fit="fill" :lazy="false" />
+        <el-image class="product-image-el" :src="product?.image" fit="cover" :lazy="false" />
       </div>
 
       <div class="product-description">
@@ -35,7 +35,7 @@
     </div>
 
     <div class="mt">
-      <h1>Recommended Item</h1>
+      <h1>Recommended Items</h1>
       <popular-products />
     </div>
   </div>
@@ -74,7 +74,8 @@ function handleBuyItem() {
   }
 
   if (!authStore.token) {
-    router.push('/login')
+    ElMessage.info('You must log in first')
+    router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
   } else {
     cartStore.setBuyNow({
       ...product.value,
@@ -92,7 +93,8 @@ function handleAddToCart() {
   }
 
   if (!authStore.token) {
-    router.push('/login')
+    ElMessage.info('You must log in first')
+    router.push({ path: '/login', query: { redirect: router.currentRoute.value.fullPath } })
   } else {
     cartStore.handleAddToCart({ ...product.value, quantity: quantity.value <= 0 ? (quantity.value = 1) : quantity.value })
     quantity.value = 1
@@ -113,6 +115,9 @@ watch(
 </script>
 
 <style scoped>
+.el-breadcrumb span {
+  margin-bottom: 12px;
+}
 .search-bar-form {
   width: 100%;
   margin-bottom: 20px;
@@ -125,7 +130,7 @@ watch(
 .container {
   width: 100%;
   max-width: 1440px;
-  margin: 3rem auto;
+  margin: 2rem auto;
   padding: 0 1rem;
   box-sizing: border-box;
 }
