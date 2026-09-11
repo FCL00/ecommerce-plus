@@ -1,7 +1,7 @@
 <template>
   <main class="container">
     <section class="shipping-section">
-      <section id="delivery-options">
+      <div id="delivery-options">
         <el-card shadow="never">
           <h1>Delivery Options</h1>
           <el-radio-group v-model="deliveryOptions" size="large">
@@ -25,7 +25,7 @@
             </p>
           </div>
         </el-card>
-      </section>
+      </div>
       <section id="payment">
         <el-card shadow="never">
           <h1>Select Payment Method</h1>
@@ -62,7 +62,7 @@
       </section>
     </section>
     <section id="review-section">
-      <el-card shadow="never">
+      <el-card class="review-card" shadow="never">
         <h1 style="position: sticky">Review Your Cart</h1>
         <review-card />
         <summary-card :delivery-options="deliveryOptions" @on-checkout="handleCheckOut" />
@@ -193,6 +193,10 @@ onBeforeRouteLeave((to, from, next) => {
 </script>
 
 <style scoped>
+.review-card {
+  height: 100%;
+}
+
 .flex-text {
   display: flex;
   justify-content: space-between;
@@ -214,8 +218,7 @@ onBeforeRouteLeave((to, from, next) => {
 }
 
 #delivery-options,
-#payment,
-#address {
+#payment {
   margin-bottom: 20px;
 }
 
