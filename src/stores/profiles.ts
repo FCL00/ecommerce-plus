@@ -28,7 +28,7 @@ export const useProfile = defineStore('profile', {
         },
 
         checkExistingProfile(id: string){
-            return this.profiles.findIndex((profile: any) => profile.id === id )
+            return this.profiles.findIndex((profile: Profile) => profile.id === id )
         },
 
         saveProfileOnLocalStorage(){

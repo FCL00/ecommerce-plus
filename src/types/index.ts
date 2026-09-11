@@ -20,6 +20,17 @@ interface Products {
   category?: string
 }
 
+type Profile = {
+  password: string
+  confirmPassword: string
+  email: string
+  id: string
+  firstname: string
+  lastname: string
+  contact: string
+  address: string
+}
+
 type Variant = "info" | "warning" | "success" | "error"
 
 interface Carts extends Products {
@@ -67,6 +78,7 @@ interface FormProps {
 }
 
 export type {
+  Profile,
   Status,
   Products,
   Carts,
