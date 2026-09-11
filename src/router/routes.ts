@@ -16,6 +16,7 @@ import ForgotPassword from '@/views/ForgotPassword.vue'
 import Password from '@/views/Password.vue'
 
 import { useProducts } from '@/stores/products'
+import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 const routes = [
   {
@@ -83,9 +84,10 @@ const routes = [
         path: ':id',
         name: 'product-details',
         component: ProductDetails,
-        beforeEnter: (to, from, next) => {
-          const productStore = useProducts()
-          const isValidUUID = productStore.getProductById(to.params.id)
+        beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+          const productStore = useProducts();
+          const id = Array.isArray(to.params.id) ? to.params.id[0] : to.params.id
+          const isValidUUID = productStore.getProductById(id)
           if (isValidUUID) {
             next()
           } else {
