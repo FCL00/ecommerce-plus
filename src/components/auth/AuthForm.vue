@@ -1,11 +1,22 @@
 <template>
   <el-card shadow="never">
-    <el-form ref="ruleFormRef" :model="ruleForm" :rules="rules" @submit.prevent="submitForm(ruleFormRef)">
+    <el-form
+      ref="ruleFormRef"
+      :model="ruleForm"
+      :rules="rules"
+      @submit.prevent="submitForm(ruleFormRef)"
+    >
       <h1 class="heading">{{ title }}</h1>
       <el-form-item label="Email" prop="email" label-position="top">
-        <el-input v-model="ruleForm.email" placeholder="Enter your email" clearable prefix-icon="User" size="large" />
+        <el-input
+          v-model="ruleForm.email"
+          placeholder="Enter your email"
+          clearable
+          prefix-icon="User"
+          size="large"
+        />
       </el-form-item>
-      <el-form-item label="Password" prop="password" label-position="top">
+      <el-form-item class="password" label="Password" prop="password" label-position="top">
         <el-input
           v-model="ruleForm.password"
           type="password"
@@ -16,7 +27,13 @@
           size="large"
         />
       </el-form-item>
-      <el-form-item v-if="mode === 'signup'" label="Confirm Password" prop="confirmPassword" label-position="top">
+      <el-form-item
+        class="confirmPassword"
+        v-if="mode === 'signup'"
+        label="Confirm Password"
+        prop="confirmPassword"
+        label-position="top"
+      >
         <el-input
           v-model="ruleForm.confirmPassword"
           type="password"
@@ -46,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, defineEmits } from 'vue'
+import { ref, reactive } from 'vue'
 import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
 import { RouterLink } from 'vue-router'
 import { useValidators } from '@/composables/useValidators'
@@ -71,7 +88,12 @@ const emit = defineEmits(['on-submit'])
 
 const rules = reactive<FormRules<RuleForm>>({
   email: [{ validator: emailValidator, trigger: 'blur' }],
-  password: [{ validator: mode === 'login' ? normalValidator('password') : validateStrongPassword, trigger: 'blur' }],
+  password: [
+    {
+      validator: mode === 'login' ? normalValidator('password') : validateStrongPassword,
+      trigger: 'blur',
+    },
+  ],
   confirmPassword: [{ validator: matchPassword(() => ruleForm.password ?? ''), trigger: 'blur' }],
 })
 
@@ -79,7 +101,7 @@ const formattedValue = () => ({
   ...ruleForm,
   email: ruleForm.email?.toLowerCase(),
 })
-  
+
 const submitForm = async (formEl: FormInstance | undefined) => {
   if (!formEl) return
   await formEl.validate((valid) => {
@@ -94,6 +116,22 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 </script>
 
 <style scoped>
+.password:has(.el-form-item__error) {
+  margin-bottom: 50px;
+}
+
+@media (min-width: 768px) {
+  .password:has(.el-form-item__error) {
+    margin-bottom: 28px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .password:has(.el-form-item__error) {
+    margin-bottom: 25px;
+  }
+}
+
 a {
   text-decoration: none;
   color: black;
