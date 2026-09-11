@@ -91,6 +91,10 @@ function handleLogout() {
   justify-content: center;
   width: 100%;
   border-bottom: 1px #e4e4e4 solid;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
 }
 
 /* navbar */
